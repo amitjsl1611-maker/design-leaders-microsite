@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Design Leaders</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Goudy+Bookletter+1911&family=Hanken+Grotesk:ital,wght@0,400;0,500;0,600;1,400&family=Pixelify+Sans:wght@400&display=swap">
+
+<style>
+/* ─── Tokens ─────────────────────────────────── */
+:root {
+  --bg:    #F8F1E8;
+  --ink:   #3A3220;
+  --logo:  #AF481F;
+  --name:  #1C1A18;
+  --sub:   #AF481F;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Hanken Grotesk', system-ui, sans-serif;
+}
+
+/* ─── DOT GRID ────────────────────────────────── */
+.dot-bg {
+  position: fixed;
+  inset: 0;
+  background: url('bg.png') repeat;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ─── NAV ─────────────────────────────────────── */
+nav {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28px 56px;
+}
+.logo {
+  font-family: 'Hanken Grotesk', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--logo);
+  text-decoration: none;
+}
+.nav-right { display: flex; align-items: center; gap: 8px; }
+.btn-search {
+  background: none; border: none; cursor: pointer;
+  padding: 8px; color: var(--ink); opacity: 0.6;
+  display: flex; align-items: center; transition: opacity .2s;
+}
+.btn-search:hover { opacity: 1; }
+.btn-contact {
+  background: var(--name); color: var(--bg);
+  border: none; padding: 10px 24px; border-radius: 100px;
+  font-family: 'Hanken Grotesk', sans-serif;
+  font-size: 13px; font-weight: 500; letter-spacing: .02em;
+  cursor: pointer; text-decoration: none; transition: background .2s;
+}
+.btn-contact:hover { background: var(--logo); }
+
+/* ─── HERO ────────────────────────────────────── */
+.hero {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: calc(100vh - 85px);
+  padding: 0 56px 56px;
+}
+
+/* Heading — top left */
+h1.hero-heading {
+  position: absolute;
+  top: 115px; left: 116px;
+  font-family: 'Goudy Bookletter 1911', Georgia, serif;
+  font-size: 84px;
+  font-weight: 400;
+  line-height: 1.0;
+  color: var(--ink);
+  max-width: 560px;
+  letter-spacing: -0.01em;
+}
+
+/* Portrait — free floating, no container, anchored right */
+.portrait {
+  position: absolute;
+  right: 60px;
+  bottom: 0;
+  height: 100%;
+  width: auto;
+  max-width: 55%;
+  object-fit: contain;
+  object-position: bottom right;
+  pointer-events: none;
+}
+.portrait-ph {
+  position: absolute;
+  left: 0; bottom: 0;
+  width: 420px; height: 85%;
+  border: 1.5px dashed rgba(58,50,32,.18);
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(58,50,32,.28);
+  font-size: 12px; letter-spacing: .08em; text-transform: uppercase;
+}
+
+/* Identity block — bottom left */
+.hero-id {
+  position: absolute;
+  bottom: 56px; left: 116px;
+  display: flex; flex-direction: column; gap: 6px;
+}
+h2.hero-name {
+  font-family: 'Hanken Grotesk', sans-serif;
+  font-size: 48px; font-weight: 600;
+  color: var(--name); line-height: 1.05; letter-spacing: -.02em;
+}
+.hero-tagline {
+  font-family: 'Hanken Grotesk', sans-serif;
+  font-size: 15px; font-style: italic;
+  color: var(--sub); margin-top: 2px;
+}
+.hero-cta {
+  display: inline-block; margin-top: 10px;
+  font-family: 'Hanken Grotesk', sans-serif;
+  font-size: 14px; font-weight: 500;
+  color: var(--name); text-decoration: none;
+  position: relative; padding-bottom: 2px;
+}
+.hero-cta::after {
+  content: ''; position: absolute;
+  bottom: 0; left: 0; width: 100%; height: 1px;
+  background: var(--name);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform .32s ease;
+}
+.hero-cta:hover::after { transform: scaleX(1); }
+
+/* ─── LOADER OVERLAY ──────────────────────────── */
+#loader {
+  position: fixed; inset: 0; z-index: 200;
+  background: #000;
+  display: flex; align-items: center; justify-content: center;
+}
+#stage { display: flex; align-items: center; gap: 24px; }
+
+#grid {
+  display: grid;
+  grid-template-columns: repeat(7, 9px);
+  grid-template-rows: repeat(7, 9px);
+  gap: 2.5px; flex-shrink: 0;
+}
+.dot {
+  width: 9px; height: 9px; border-radius: 1.5px;
+  background: rgba(255,255,255,.11);
+  transition: background-color 100ms ease, opacity 100ms ease;
+}
+
+#copy {
+  font-family: 'Pixelify Sans', monospace;
+  font-size: 18px; font-weight: 400; line-height: 1.65;
+  color: #C4C4C4; letter-spacing: .05em;
+  white-space: nowrap; user-select: none; min-width: 260px;
+}
+#cursor {
+  display: inline-block; width: 2px; height: 1.1em;
+  background: #C4C4C4; margin-left: 2px; vertical-align: middle;
+  animation: blink .75s step-end infinite;
+}
+#cursor.done { display: none; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+@media (prefers-reduced-motion: reduce) {
+  .dot { transition: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ─── DOT GRID (hero bg) ─── -->
+<div class="dot-bg"></div>
+
+<!-- ─── HERO PAGE (revealed after loader) ─── -->
+<nav>
+  <a class="logo" href="#">The Design Leaders</a>
+  <div class="nav-right">
+    <button class="btn-search" aria-label="Search">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" viewBox="0 0 24 24">
+        <circle cx="11" cy="11" r="7.5"/><line x1="17" y1="17" x2="22.5" y2="22.5"/>
+      </svg>
+    </button>
+    <a class="btn-contact" href="#">Get in touch</a>
+  </div>
+</nav>
+
+<main class="hero">
+  <h1 class="hero-heading">Design Leader<br>Of the Week</h1>
+
+  <img class="portrait" src="hero image temp.png" alt="Ravi Kumar" id="portrait-img">
+
+  <div class="hero-id">
+    <h2 class="hero-name">Ravi Kumar</h2>
+    <p class="hero-tagline">"Motion man of India"</p>
+    <a class="hero-cta" href="#">Why follow him</a>
+  </div>
+</main>
+
+<!-- ─── LOADER (sits on top) ─── -->
+<div id="loader">
+  <div id="stage">
+    <div id="grid"></div>
+    <p id="copy"><span id="cursor"></span></p>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* portrait fallback */
+  const pImg = document.getElementById('portrait-img');
+  function showPh() {
+    pImg.remove();
+    const ph = document.createElement('div');
+    ph.className = 'portrait-ph';
+    ph.textContent = 'Portrait image';
+    document.querySelector('.hero').appendChild(ph);
+  }
+  if (!pImg.src || pImg.src === location.href) showPh();
+  else pImg.addEventListener('error', showPh);
+
+  /* ── PONG ───────────────────────────────── */
+  const COLS = 7, ROWS = 7, PH = 3, INTERVAL = 120;
+  const gridEl = document.getElementById('grid');
+  const dots = [];
+  for (let r = 0; r < ROWS; r++) {
+    dots[r] = [];
+    for (let c = 0; c < COLS; c++) {
+      const el = document.createElement('div');
+      el.className = 'dot';
+      gridEl.appendChild(el);
+      dots[r][c] = el;
+    }
+  }
+
+  let bx=3,by=3,dx=1,dy=-1,lTop=2,rTop=2,trail=[];
+  function randT(){ return Math.floor(Math.random()*(ROWS-PH+1)); }
+  let lIdle=randT(), rIdle=randT();
+  function clampP(t){ return Math.max(0,Math.min(ROWS-PH,t)); }
+
+  function predictImpact(){
+    let x=bx,y=by,ddx=dx,ddy=dy;
+    for(let i=0;i<80;i++){
+      x+=ddx; y+=ddy;
+      if(y<0){y=-y;ddy=1;}
+      if(y>=ROWS){y=2*ROWS-2-y;ddy=-1;}
+      if(x<=1||x>=COLS-2)break;
+    }
+    return Math.max(0,Math.min(ROWS-1,y));
+  }
+  function bounceAngle(ny,pt){
+    const rel=ny-pt;
+    if(rel===0)return -1;
+    if(rel>=PH-1)return 1;
+    return Math.random()<.5?-1:1;
+  }
+
+  function tick(){
+    trail.push({x:bx,y:by});
+    if(trail.length>3)trail.shift();
+    let nx=bx+dx,ny=by+dy,ndx=dx,ndy=dy;
+    if(ny<0){ny=-ny;ndy=1;}
+    if(ny>=ROWS){ny=2*ROWS-2-ny;ndy=-1;}
+    if(nx<1&&ndx<0){nx=1;ndx=1;ndy=bounceAngle(ny,lTop);rIdle=randT();}
+    else if(nx>=COLS-1&&ndx>0){nx=COLS-2;ndx=-1;ndy=bounceAngle(ny,rTop);lIdle=randT();}
+    bx=nx;by=ny;dx=ndx;dy=ndy;
+    const impact=predictImpact(),poff=Math.floor(PH/2);
+    if(dx<0){lTop+=Math.sign(clampP(impact-poff)-lTop);rTop+=Math.sign(clampP(rIdle)-rTop);}
+    else{rTop+=Math.sign(clampP(impact-poff)-rTop);lTop+=Math.sign(clampP(lIdle)-lTop);}
+    render();
+  }
+
+  function render(){
+    for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++){
+      dots[r][c].style.backgroundColor='rgba(255,255,255,0.11)';
+      dots[r][c].style.opacity='1';
+    }
+    const alphas=['0.22','0.40','0.62'];
+    trail.forEach((p,i)=>{
+      if(p.y>=0&&p.y<ROWS&&p.x>=0&&p.x<COLS){
+        dots[p.y][p.x].style.backgroundColor='#F5C518';
+        dots[p.y][p.x].style.opacity=alphas[i]??'0.22';
+      }
+    });
+    dots[by][bx].style.backgroundColor='#F5C518';
+    dots[by][bx].style.opacity='1';
+    for(let r=lTop;r<lTop+PH;r++)if(r>=0&&r<ROWS){dots[r][0].style.backgroundColor='#C4C4C4';dots[r][0].style.opacity='1';}
+    for(let r=rTop;r<rTop+PH;r++)if(r>=0&&r<ROWS){dots[r][COLS-1].style.backgroundColor='#C4C4C4';dots[r][COLS-1].style.opacity='1';}
+  }
+
+  const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  render();
+  if(!reduced){
+    let last=0;
+    (function loop(now){if(now-last>=INTERVAL){last=now;tick();}requestAnimationFrame(loop);})(0);
+  }
+
+  /* ── TYPEWRITER ─────────────────────────── */
+  const copyEl=document.getElementById('copy');
+  const cursorEl=document.getElementById('cursor');
+  const LINES=['MEET THE MINDS','MAKING INDIAN DESIGN','MORE FUN'];
+  const lineSpans=LINES.map(()=>{const s=document.createElement('span');copyEl.insertBefore(s,cursorEl);return s;});
+  lineSpans.forEach((s,i)=>{if(i<lineSpans.length-1)copyEl.insertBefore(document.createElement('br'),lineSpans[i+1]);});
+  const dotsEl=document.createElement('span');
+  lineSpans[lineSpans.length-1].after(dotsEl);
+
+  function startDots(){
+    const states=['.','..','...'];let i=0;
+    dotsEl.textContent=states[i];
+    setInterval(()=>{i=(i+1)%states.length;dotsEl.textContent=states[i];},400);
+    cursorEl.classList.add('done');
+  }
+  function typeLines(){
+    let li=0,ci=0;
+    function next(){
+      if(li>=LINES.length){startDots();return;}
+      const line=LINES[li];
+      if(ci<line.length){lineSpans[li].textContent+=line[ci];ci++;setTimeout(next,55);}
+      else{li++;ci=0;setTimeout(next,li<LINES.length?260:55);}
+    }
+    setTimeout(next,400);
+  }
+  typeLines();
+
+  /* ── PIXEL REVEAL ───────────────────────── */
+  function startPixelReveal(){
+    const CELL=56, DUR=900, JITTER=0.38;
+    const wrap=document.createElement('div');
+    wrap.style.cssText='position:fixed;inset:0;z-index:300;pointer-events:none;';
+    const cv=document.createElement('canvas');
+    cv.style.cssText='position:absolute;inset:0;display:block;';
+    wrap.appendChild(cv);
+    document.body.appendChild(wrap);
+    const ctx=cv.getContext('2d');
+    const dpr=Math.min(devicePixelRatio||1,2);
+
+    function buildGrid(){
+      const W=innerWidth,H=innerHeight;
+      cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);
+      cv.style.width=W+'px';cv.style.height=H+'px';
+      ctx.setTransform(dpr,0,0,dpr,0,0);
+      ctx.fillStyle='#000';ctx.fillRect(0,0,W,H);
+      const cols=Math.ceil(W/CELL),rows=Math.ceil(H/CELL);
+      const ox=(W-cols*CELL)/2,oy=(H-rows*CELL)/2;
+      const cells=[];
+      for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){
+        const p=(rows-1-r)/Math.max(rows-1,1);
+        const t=(p*(1-JITTER)+Math.random()*JITTER)*DUR;
+        const x1=Math.round(ox+c*CELL),y1=Math.round(oy+r*CELL);
+        const x2=Math.round(ox+(c+1)*CELL),y2=Math.round(oy+(r+1)*CELL);
+        cells.push({x:x1,y:y1,w:x2-x1,h:y2-y1,t});
+      }
+      cells.sort((a,b)=>a.t-b.t);
+      return cells;
+    }
+
+    // Hide loader, canvas takes over
+    document.getElementById('loader').style.display='none';
+    let cells=buildGrid(),idx=0,startTs=null,rafId=null;
+
+    function loop(ts){
+      if(!startTs)startTs=ts;
+      const elapsed=ts-startTs;
+      while(idx<cells.length&&cells[idx].t<=elapsed){
+        const c=cells[idx++];ctx.clearRect(c.x,c.y,c.w,c.h);
+      }
+      if(idx<cells.length)rafId=requestAnimationFrame(loop);
+      else wrap.remove();
+    }
+    rafId=requestAnimationFrame(loop);
+  }
+
+  setTimeout(()=>{
+    reduced
+      ? (document.getElementById('loader').style.transition='opacity 300ms',document.getElementById('loader').style.opacity='0',setTimeout(()=>document.getElementById('loader').remove(),320))
+      : startPixelReveal();
+  }, 5000);
+
+})();
+</script>
+
+</body>
+</html>
