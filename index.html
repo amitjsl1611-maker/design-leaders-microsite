@@ -295,11 +295,11 @@ h2.hero-name {
     const alphas=['0.22','0.40','0.62'];
     trail.forEach((p,i)=>{
       if(p.y>=0&&p.y<ROWS&&p.x>=0&&p.x<COLS){
-        dots[p.y][p.x].style.backgroundColor='#F5C518';
+        dots[p.y][p.x].style.backgroundColor='#C4C4C4';
         dots[p.y][p.x].style.opacity=alphas[i]??'0.22';
       }
     });
-    dots[by][bx].style.backgroundColor='#F5C518';
+    dots[by][bx].style.backgroundColor='#C4C4C4';
     dots[by][bx].style.opacity='1';
     for(let r=lTop;r<lTop+PH;r++)if(r>=0&&r<ROWS){dots[r][0].style.backgroundColor='#C4C4C4';dots[r][0].style.opacity='1';}
     for(let r=rTop;r<rTop+PH;r++)if(r>=0&&r<ROWS){dots[r][COLS-1].style.backgroundColor='#C4C4C4';dots[r][COLS-1].style.opacity='1';}
